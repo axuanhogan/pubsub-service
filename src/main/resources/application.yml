@@ -1,0 +1,28 @@
+quarkus:
+  log:
+    level: INFO
+    category:
+      'org.jboss.resteasy.reactive.client.logging':
+        level: DEBUG
+    console:
+      format: '%d{yyyy-MM-dd HH:mm:ss.SSS} %-5p [%c{3.}:%L] [%X{REQUEST.ID}] %s%e%n'
+  devservices:
+    enabled: true
+  datasource:
+    db-kind: postgresql
+    devservices:
+      port: 5433
+      db-name: postgres
+      username: quarkus
+      password: quarkus
+  http:
+    access-log:
+      enabled: true
+    limits:
+      max-body-size: 100M
+  google:
+    cloud:
+      project-id: ${GOOGLE.CLOUD.PROJECT_ID}
+      pubsub:
+        enabled: ${GOOGLE.CLOUD.PUBSUB.ENABLED}
+        enable-ordering: ${GOOGLE.CLOUD.PUBSUB.ENABLE_ORDERING}
