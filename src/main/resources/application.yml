@@ -24,5 +24,4 @@ quarkus:
     cloud:
       project-id: ${GOOGLE.CLOUD.PROJECT_ID}
       pubsub:
-        enabled: ${GOOGLE.CLOUD.PUBSUB.ENABLED}
         enable-ordering: ${GOOGLE.CLOUD.PUBSUB.ENABLE_ORDERING}
