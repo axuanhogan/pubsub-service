@@ -15,6 +15,7 @@ import jakarta.enterprise.inject.Instance
 import jakarta.inject.Inject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.concurrent.ConcurrentHashMap
 
@@ -93,6 +94,21 @@ class PubSubSubscriber {
         val messageId = message.messageId
 
         Log.infof("Received PubSub message ID: %s, Job: %s", messageId, messageJob)
+
+        // Check for delay attribute
+        val delaySecondsStr = message.attributesMap["delaySeconds"]
+        if (delaySecondsStr != null) {
+            try {
+                val delaySeconds = delaySecondsStr.toLong()
+                if (delaySeconds > 0) {
+                    Log.infof("Delaying message processing for %d seconds. Message ID: %s", delaySeconds, messageId)
+                    delay(delaySeconds * 1000) // Convert to milliseconds
+                    Log.infof("Delay completed, processing message. Message ID: %s", messageId)
+                }
+            } catch (e: NumberFormatException) {
+                Log.warnf("Invalid delaySeconds value: %s, processing message immediately. Message ID: %s", delaySecondsStr, messageId)
+            }
+        }
 
         try {
             val handler = findHandler(messageJob)

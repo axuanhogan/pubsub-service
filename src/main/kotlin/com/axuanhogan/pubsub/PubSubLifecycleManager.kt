@@ -16,12 +16,16 @@ class PubSubLifecycleManager {
     @Inject
     lateinit var pubSubPublisher: PubSubPublisher
 
+    private val startSubscriberList = listOf(
+        "application.test.topic-hello.pubsub"
+    )
+
     fun onStart(@Observes startupEvent: StartupEvent) {
         Log.info("Starting Pub/Sub subscriptions...")
 
         try {
             // Start subscriptions for async job processing
-            startAsyncJobSubscriptions()
+            startSubscriptions()
 
             Log.info("Pub/Sub subscriptions started successfully")
         } catch (e: Exception) {
@@ -46,10 +50,10 @@ class PubSubLifecycleManager {
         }
     }
 
-    private fun startAsyncJobSubscriptions() {
-        // Start subscription for point transaction jobs
-        pubSubSubscriber.startSubscription("application.test.topic-hello.pubsub")
-
-        Log.info("Started async job subscriptions: application.test.topic-hello.pubsub")
+    private fun startSubscriptions() {
+        startSubscriberList.forEach { subscriberName ->
+            pubSubSubscriber.startSubscription(subscriberName)
+            Log.info("Started Subscription: $subscriberName")
+        }
     }
 }
